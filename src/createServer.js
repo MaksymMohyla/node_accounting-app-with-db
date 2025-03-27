@@ -8,8 +8,10 @@ const {
 const createServer = () => {
   const app = express();
 
-  app.get('/users', (_, res) => {
-    res.send(User.findAll());
+  app.get('/users', async (_, res) => {
+    const users = await User.findAll();
+
+    res.send(users);
   });
 
   app.get('/users/:id', async (req, res) => {
@@ -59,7 +61,7 @@ const createServer = () => {
     const user = await User.findByPk(id);
 
     if (!user) {
-      res.sendStatus(400);
+      res.sendStatus(404);
 
       return;
     }
@@ -108,9 +110,9 @@ const createServer = () => {
     res.send(expensesList);
   });
 
-  app.get('/expenses/:id', (req, res) => {
+  app.get('/expenses/:id', async (req, res) => {
     const { id } = req.params;
-    const expense = Expense.findByPk(id);
+    const expense = await Expense.findByPk(id);
 
     if (!expense) {
       res.sendStatus(404);
